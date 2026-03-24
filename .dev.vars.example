@@ -1,0 +1,6 @@
+# Segredos para o Wrangler em desenvolvimento local
+# Copie para .dev.vars e preencha com suas chaves
+# .dev.vars é gitignored
+
+SERPER_API_KEY=sua_chave_serper_aqui
+OPENROUTER_API_KEY=sua_chave_openrouter_aqui

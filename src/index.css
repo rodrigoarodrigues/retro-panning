@@ -1,0 +1,198 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ===== BASE RETRO STYLES ===== */
+:root {
+  --color-bg: #1A0A00;
+  --color-primary: #8B2500;
+  --color-accent: #FF4500;
+  --color-text: #F5DEB3;
+  --color-muted: #CC9966;
+  --color-border: #CC6600;
+  --color-card: #2A1200;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  font-size: clamp(10px, 0.85vw, 13px);
+}
+
+body {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: 'Press Start 2P', monospace;
+  margin: 0;
+  min-height: 100vh;
+  /* CRT horizontal scanlines base */
+  background-image: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 0, 0, 0.12) 2px,
+    rgba(0, 0, 0, 0.12) 4px
+  );
+}
+
+/* ===== CRT OVERLAY ===== */
+#root {
+  position: relative;
+  min-height: 100vh;
+}
+
+#root::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 0, 0, 0.05) 2px,
+    rgba(0, 0, 0, 0.05) 4px
+  );
+  pointer-events: none;
+  z-index: 9998;
+}
+
+/* CRT vignette */
+#root::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(
+    ellipse at center,
+    transparent 60%,
+    rgba(0, 0, 0, 0.6) 100%
+  );
+  pointer-events: none;
+  z-index: 9997;
+}
+
+/* ===== SCROLLBAR ===== */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: #1A0A00; }
+::-webkit-scrollbar-thumb { background: #CC6600; }
+::-webkit-scrollbar-thumb:hover { background: #FF4500; }
+
+/* ===== PIXEL BORDER UTILITIES ===== */
+@layer utilities {
+  .pixel-border {
+    box-shadow:
+      4px 0 0 0 #CC6600,
+      -4px 0 0 0 #CC6600,
+      0 4px 0 0 #CC6600,
+      0 -4px 0 0 #CC6600;
+  }
+
+  .pixel-border-accent {
+    box-shadow:
+      4px 0 0 0 #FF4500,
+      -4px 0 0 0 #FF4500,
+      0 4px 0 0 #FF4500,
+      0 -4px 0 0 #FF4500;
+  }
+
+  .pixel-border-scam {
+    box-shadow:
+      4px 0 0 0 #FF0000,
+      -4px 0 0 0 #FF0000,
+      0 4px 0 0 #FF0000,
+      0 -4px 0 0 #FF0000;
+    animation: scam-pulse 1s ease-in-out infinite;
+  }
+
+  .text-glow {
+    text-shadow: 0 0 8px #FF4500, 0 0 16px #8B2500;
+  }
+
+  .text-glow-green {
+    text-shadow: 0 0 8px #00FF00, 0 0 16px #00AA00;
+  }
+
+  .scanline-overlay {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .scanline-overlay::after {
+    content: '';
+    position: absolute;
+    top: -100%;
+    left: 0;
+    width: 100%;
+    height: 30px;
+    background: linear-gradient(
+      to bottom,
+      transparent,
+      rgba(255, 69, 0, 0.04),
+      transparent
+    );
+    animation: scanline 8s linear infinite;
+    pointer-events: none;
+  }
+}
+
+/* ===== KEYFRAMES ===== */
+@keyframes scam-pulse {
+  0%, 100% {
+    box-shadow:
+      4px 0 0 0 #FF0000,
+      -4px 0 0 0 #FF0000,
+      0 4px 0 0 #FF0000,
+      0 -4px 0 0 #FF0000;
+  }
+  50% {
+    box-shadow:
+      4px 0 0 0 #FF6666,
+      -4px 0 0 0 #FF6666,
+      0 4px 0 0 #FF6666,
+      0 -4px 0 0 #FF6666;
+  }
+}
+
+@keyframes scanline {
+  0%   { transform: translateY(0); }
+  100% { transform: translateY(calc(100vh + 100%)); }
+}
+
+/* ===== SHADCN/UI CSS VARIABLE OVERRIDES ===== */
+@layer base {
+  :root {
+    --background: 20 100% 5%;
+    --foreground: 39 71% 83%;
+    --card: 20 73% 11%;
+    --card-foreground: 39 71% 83%;
+    --popover: 20 73% 11%;
+    --popover-foreground: 39 71% 83%;
+    --primary: 19 100% 27%;
+    --primary-foreground: 39 71% 83%;
+    --secondary: 20 60% 18%;
+    --secondary-foreground: 39 71% 83%;
+    --muted: 20 60% 18%;
+    --muted-foreground: 30 50% 60%;
+    --accent: 16 100% 50%;
+    --accent-foreground: 20 100% 5%;
+    --destructive: 0 100% 50%;
+    --destructive-foreground: 39 71% 83%;
+    --border: 30 100% 40%;
+    --input: 20 73% 11%;
+    --ring: 16 100% 50%;
+    --radius: 0px;
+  }
+}
+
+/* Force pixel font on all inputs and buttons */
+input, button, select, textarea {
+  font-family: 'Press Start 2P', monospace !important;
+}
+
+/* Remove focus ring default, use custom */
+*:focus-visible {
+  outline: 2px solid #FF4500;
+  outline-offset: 2px;
+}

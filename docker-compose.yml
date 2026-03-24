@@ -1,0 +1,41 @@
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "5173:5173"
+    volumes:
+      - .:/app
+      - /app/node_modules   # volume anônimo: evita o host sobrescrever node_modules do container
+    environment:
+      - NODE_ENV=development
+      - VITE_WORKER_URL=http://worker:8787
+    depends_on:
+      - worker
+    networks:
+      - retro
+
+  worker:
+    image: node:22-alpine
+    working_dir: /app
+    # Instala deps e inicia wrangler dev com binding 0.0.0.0 para aceitar conexões de outros containers
+    command: >
+      sh -c "npm install &&
+             npx wrangler dev worker/src/index.ts
+             --port 8787
+             --ip 0.0.0.0
+             --local"
+    ports:
+      - "8787:8787"
+    volumes:
+      - .:/app
+      - /app/node_modules
+    # Wrangler lê segredos de .dev.vars (não de .env)
+    # Crie o arquivo .dev.vars com SERPER_API_KEY e OPENROUTER_API_KEY
+    networks:
+      - retro
+
+networks:
+  retro:
+    driver: bridge
